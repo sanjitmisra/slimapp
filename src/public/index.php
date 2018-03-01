@@ -3,6 +3,7 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 require '../vendor/autoload.php';
+require_once('GreetingController.php');
 
 //Configs needed in the app
 $config['displayErrorDetails'] = true;
@@ -23,6 +24,11 @@ $container['logger'] = function($c) {
     return $logger;
 };	
 
+// Register the Greetings controller
+$container['GreetingController'] = function($c){
+	return new GreetingController();
+};
+
 //Register Routes
 $app->get('/hello/{name}', function (Request $request, Response $response, array $args) {
     
@@ -34,5 +40,7 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
 });
 
 
+$app->get('/greetings/{name}', \GreetingController::class . ':hello');
+	
 //Launch app
 $app->run();
