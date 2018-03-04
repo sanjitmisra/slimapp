@@ -3,7 +3,10 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 require '../vendor/autoload.php';
-require_once('GreetingController.php');
+require_once('controllers/GreetingController.php');
+require_once('controllers/AuthController.php');
+require_once('controllers/IncidentController.php');
+require_once('controllers/UserController.php');
 
 //Configs needed in the app
 $config['displayErrorDetails'] = true;

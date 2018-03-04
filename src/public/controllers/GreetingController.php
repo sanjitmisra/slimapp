@@ -4,7 +4,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 require '../vendor/autoload.php';
 
-class GreetingController
+class GreetingController 
 {
 	public function __construct()
 	{}
