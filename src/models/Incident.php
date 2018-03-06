@@ -1,6 +1,7 @@
 <?php
 
-class Incident
+class Incident extends IlluminateDatabaseEloquentModel
 {
+	protected $table = 'incidents';
 	public $id;
 }

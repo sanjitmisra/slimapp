@@ -3,7 +3,7 @@
 class User
 {
 	public $id;
-	public $userName;
-	public $passwordHash;
-	public $passwordSalt;
+	public $username;
+	public $passwordhash;
+	public $created;
 }

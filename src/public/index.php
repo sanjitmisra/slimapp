@@ -3,14 +3,17 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 require '../vendor/autoload.php';
-require_once('controllers/GreetingController.php');
-require_once('controllers/AuthController.php');
-require_once('controllers/IncidentController.php');
-require_once('controllers/UserController.php');
+require_once('../controllers/GreetingController.php');
+require_once('../controllers/AuthController.php');
+require_once('../controllers/IncidentController.php');
+require_once('../controllers/UserController.php');
 
 //Configs needed in the app
 $config['displayErrorDetails'] = true;
 $config['addContentLengthHeader'] = false;
+
+// Eloquent Config
+// $dbConfig = include('../src/eloquent/config.php');
 
 
 //Instantiate the app
@@ -42,6 +45,8 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
     return $response->withJson($data,200);
 });
 
+// Auth route
+$app->post('/auth', \AuthController::class . ':authenticate');
 
 $app->get('/greetings/{name}', \GreetingController::class . ':hello');
 	
