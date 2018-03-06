@@ -27,17 +27,21 @@ class AuthController
 
 		// Create an instance of UserService
 		$userSvc = new UserService($db);
+
+		$data = $userSvc->get($username, $password);
+		$num = $data->rowCount();
 		
-		if(password_verify($password, $passwordHash))
+		//if(password_verify($password, $passwordHash))
+		if($num > 0)
 		{
 			//User authenticated
-			$retData = $userSvc->get($username, $password);
-			echo $retData;
-			return $response->withJson($retData,400);
+			//$retData = $userSvc->get($username, $password);
+			$responseData = array('bearer' => 'shdkw84eoqjdnlkue23elksand');
+			return $response->withJson($responseData, 200);
 		}
 		else
 		{
-			return $response->withStatus(409);
+			return $response->withJson($num,401);
 		}
 		
 	}

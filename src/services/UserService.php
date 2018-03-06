@@ -18,10 +18,9 @@ class UserService
 
 	public function get($username, $password)
 	{
-		$query = "SELECT passwordhash FROM users WHERE username = " . $username . " AND password = " . $password;
-		$stmt = $this->$conn->prepare($query);
+		$query = "SELECT passwordhash FROM users WHERE username = '" . $username . "'";
+		$stmt = $this->conn->prepare($query);
 		$stmt->execute();  
-		echo $stmt;
 		return $stmt;
 	}
 }
