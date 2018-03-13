@@ -28,7 +28,7 @@ class AuthController
 		// Create an instance of UserService
 		$userSvc = new UserService($db);
 
-		$data = $userSvc->get($username, $password);
+		$data = $userSvc->getAll($username, $password);
 		$num = $data->rowCount();
 		
 		//if(password_verify($password, $passwordHash))
@@ -43,6 +43,34 @@ class AuthController
 		{
 			return $response->withJson($num,401);
 		}
-		
 	}
+
+	public function createUserCredentials($request, $response, $args)
+	{
+
+		// Fetch the password string from the request object
+		$parsedBody = $request->getParsedBody();
+		$userId = $parsedBody['userid'] ?? false;
+		$password = $parsedBody['password'] ?? false;
+
+		$authSvc = new AuthService($db);
+		$randomizedSalt = random_bytes(20);
+		$hashedPassword = $authSvc->createPasswordHash($password, $randomizedSalt);
+
+		// Save the auth details in the auth table
+		$isAuthCreatedsuccessfully = $authSvc->saveAuthDetails($userId, $hashedPassword, $randomizedSalt);
+
+		if($isAuthCreatedsuccessfully == true)
+		{
+			$responseData = array('message' => 'Auth details for the user have been created.')
+			return $reponse->withJson($responseData, 200);
+		}
+		else
+		{
+			$responseData = array('message' => 'Failed to create Auth details for the user.')
+			return $reponse->withJson($responseData, 400);
+		}
+	}
+
 }
+	
