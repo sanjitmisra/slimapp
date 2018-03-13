@@ -4,7 +4,9 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 include_once '../services/UserService.php';
+include_once '../services/AuthService.php';
 include_once '../database/db.php';
+
 
 class AuthController
 {
@@ -53,23 +55,23 @@ class AuthController
 		$userId = $parsedBody['userid'] ?? false;
 		$password = $parsedBody['password'] ?? false;
 
-		$authSvc = new AuthService($db);
-		$randomizedSalt = random_bytes(20);
+		$authSvc = new AuthService();
+		$randomizedSalt = random_bytes(30);
 		$hashedPassword = $authSvc->createPasswordHash($password, $randomizedSalt);
 
 		// Save the auth details in the auth table
-		$isAuthCreatedsuccessfully = $authSvc->saveAuthDetails($userId, $hashedPassword, $randomizedSalt);
+		$isAuthCreatedsuccessfully = $authSvc->saveAuthDetails(3, $hashedPassword, $randomizedSalt);
 
-		if($isAuthCreatedsuccessfully == true)
-		{
-			$responseData = array('message' => 'Auth details for the user have been created.')
-			return $reponse->withJson($responseData, 200);
-		}
-		else
-		{
-			$responseData = array('message' => 'Failed to create Auth details for the user.')
-			return $reponse->withJson($responseData, 400);
-		}
+		//if($isAuthCreatedsuccessfully == true)
+		//{
+			$responseData = array('message' => (string) $isAuthCreatedsuccessfully);
+			return $response->withJson($responseData, 200);
+		//}
+		//else
+		//{
+		//	$responseData = array('message' => 'Failed to create Auth details for the user. -->' . $isAuthCreatedsuccessfully);
+		//	return $response->withJson($responseData, 400);
+		//}
 	}
 }
 	

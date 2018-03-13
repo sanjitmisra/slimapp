@@ -1,5 +1,7 @@
 <?php
 
+include_once '../database/db.php';
+
 class Auth
 {
 	// Object Props
@@ -17,22 +19,19 @@ class Auth
 		$this->conn = $db;
 	}
 
-	public function create($auth)
+	public function create()
 	{
-		$query = "INSERT INTO " . $this->table_name . "SET userid=:userId, passwordhash=:passwordHash, passwordSalt=:passwordSalt";
+		$query = "INSERT INTO " . $this->table_name . " (userid, passwordhash, passwordsalt) VALUES (" . $this->userId . ",'" . $this->passwordHash . "','" . $this->passwordSalt . "')";
 
 		$stmt = $this->conn->prepare($query);
 
 		// Parameter Binding
-		$stmt->bindParam(":userid", $this->userId); 
+		/*$stmt->bindParam(":userid", $this->userId); 
 		$stmt->bindParam(":passwordhash", $this->passwordHash);
-		$stmt->bindParam(":passwordSalt", $this->passwordSalt);
-
-		if($stmt->execute())
-		{
-			return true;
-		}
-
-		return flase;
+		$stmt->bindParam(":passwordSalt", $this->passwordSalt);*/
+		$stmt->execute();
+		
+		return "INSERT INTO " . $this->table_name . " (userid, passwordhash, passwordsalt) VALUES (" . $this->userId . ",'" . $this->passwordHash . "','" ;
+		//. $this->userId . "','" . $this->passwordHash . "','" . $this->passwordSalt . "')";
 	}
 }

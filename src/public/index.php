@@ -45,9 +45,11 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
     return $response->withJson($data,200);
 });
 
-// Auth route
+// Auth routes
 $app->post('/auth', \AuthController::class . ':authenticate');
+$app->post('/auth/createauth', \AuthController::class . ':createUserCredentials');
 
+// Greeting routes
 $app->get('/greetings/{name}', \GreetingController::class . ':hello');
 	
 //Launch app
