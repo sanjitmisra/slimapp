@@ -71,6 +71,5 @@ class AuthController
 			return $reponse->withJson($responseData, 400);
 		}
 	}
-
 }
 	
