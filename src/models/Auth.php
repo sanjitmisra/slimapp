@@ -6,7 +6,6 @@ class Auth
 {
 	// Object Props
 	public $userId;
-	public $passwordSalt;
 	public $passwordHash;
 
 	// DB Info
@@ -21,17 +20,36 @@ class Auth
 
 	public function create()
 	{
-		$query = "INSERT INTO " . $this->table_name . " (userid, passwordhash, passwordsalt) VALUES (" . $this->userId . ",'" . $this->passwordHash . "','" . $this->passwordSalt . "')";
-
+		$query = "INSERT INTO " . $this->table_name . " (userid, passwordhash) VALUES (" . $this->userId . ",'" . $this->passwordHash . "')";
 		$stmt = $this->conn->prepare($query);
+		if($stmt->execute())
+		{
+			return true;
+		}
+		return false;
+		//return "INSERT INTO " . $this->table_name . " (userid, passwordhash) VALUES (" . $this->userId . ",'" . $this->passwordHash . "')";
+	}
 
-		// Parameter Binding
-		/*$stmt->bindParam(":userid", $this->userId); 
-		$stmt->bindParam(":passwordhash", $this->passwordHash);
-		$stmt->bindParam(":passwordSalt", $this->passwordSalt);*/
+	// To use this function, the $userId property needs to be set by the caller method prior to calling.
+	public function getspecific()
+	{
+		$query = "SELECT passwordhash FROM " . $this->table_name . " WHERE userid = " . $this->userId;
+		$stmt = $this->conn->prepare($query);
 		$stmt->execute();
-		
-		return "INSERT INTO " . $this->table_name . " (userid, passwordhash, passwordsalt) VALUES (" . $this->userId . ",'" . $this->passwordHash . "','" ;
-		//. $this->userId . "','" . $this->passwordHash . "','" . $this->passwordSalt . "')";
+
+		$num = $stmt->rowCount();
+
+		if($num > 0)
+		{
+			while($row = $stmt->fetch(PDO::FETCH_ASSOC))
+			{
+				extract($row);
+				return $passwordhash;
+			}
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

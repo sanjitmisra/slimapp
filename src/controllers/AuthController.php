@@ -19,31 +19,25 @@ class AuthController
 		$username = $parsedBody['username'] ?? false;
 		$password = $parsedBody['password'] ?? false;
 
-		// Get the password hash from the DB here
-		$passwordHash = "";
-
+		// This needs to be fixed, get actual userId by resolving the username. Call UserService here.
+		$userid = 45;
 		
-		// Create a DB Object
-		$database = new Database();
-		$db = $database->getConnection();
-
 		// Create an instance of UserService
-		$userSvc = new UserService($db);
-
-		$data = $userSvc->getAll($username, $password);
-		$num = $data->rowCount();
+		$authSvc = new AuthService();
+		$result = $authSvc->validateCredentials($userid, $password);
 		
-		//if(password_verify($password, $passwordHash))
-		if($num > 0)
+		if($result == true)
 		{
 			//User authenticated
-			//$retData = $userSvc->get($username, $password);
-			$responseData = array('bearer' => 'shdkw84eoqjdnlkue23elksand');
+			$token = uniqid('', true);
+			$responseData = array('bearer' => $token);
 			return $response->withJson($responseData, 200);
 		}
 		else
 		{
-			return $response->withJson($num,401);
+			// Auth failed
+			$responseData = array('message' => 'Could not authenticate user. Check the password.');
+			return $response->withJson($responseData, 401);
 		}
 	}
 
@@ -56,22 +50,21 @@ class AuthController
 		$password = $parsedBody['password'] ?? false;
 
 		$authSvc = new AuthService();
-		$randomizedSalt = random_bytes(30);
-		$hashedPassword = $authSvc->createPasswordHash($password, $randomizedSalt);
+		$hashedPassword = $authSvc->createPasswordHash($password);
 
 		// Save the auth details in the auth table
-		$isAuthCreatedsuccessfully = $authSvc->saveAuthDetails(3, $hashedPassword, $randomizedSalt);
+		$isAuthCreatedsuccessfully = $authSvc->saveAuthDetails($userId, $hashedPassword);
 
-		//if($isAuthCreatedsuccessfully == true)
-		//{
-			$responseData = array('message' => (string) $isAuthCreatedsuccessfully);
+		if($isAuthCreatedsuccessfully == true)
+		{
+			$responseData = array('message' => 'Auth details for the user have been created.');
 			return $response->withJson($responseData, 200);
-		//}
-		//else
-		//{
-		//	$responseData = array('message' => 'Failed to create Auth details for the user. -->' . $isAuthCreatedsuccessfully);
-		//	return $response->withJson($responseData, 400);
-		//}
+		}
+		else
+		{
+			$responseData = array('message' => 'Failed to create Auth details for the user.');
+			return $response->withJson($responseData, 400);
+		}
 	}
 }
 	
