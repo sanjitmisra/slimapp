@@ -9,9 +9,7 @@ class UserService
 	private $tablename = "users";
 
 	public function __construct()
-	{
-		//$this->conn = $db;
-	}
+	{}
 
 	public function getAll($username, $password)
 	{

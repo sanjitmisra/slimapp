@@ -21,24 +21,33 @@ class AuthController
 
 		// This needs to be fixed, get actual userId by resolving the username. Call UserService here.
 		$userSvc = new UserService();
-		$userid = $userSvc->getUserIdForUserName($username);
+		$svcResponse = $userSvc->getUserIdForUserName($username);
 		
-		// Create an instance of UserService
-		$authSvc = new AuthService();
-		$result = $authSvc->validateCredentials($userid, $password);
-		
-		if($result == true)
+		if($svcResponse != false)
 		{
-			//User authenticated
-			$token = uniqid('', true);
-			$responseData = array('bearer' => $token);
-			return $response->withJson($responseData, 200);
+			// Create an instance of UserService
+			$authSvc = new AuthService();
+			$result = $authSvc->validateCredentials($svcResponse, $password);
+			
+			if($result == true)
+			{
+				//User authenticated
+				$token = uniqid('', true);
+				$responseData = array('bearer' => $token);
+				return $response->withJson($responseData, 200);
+			}
+			else
+			{
+				// Auth failed
+				$responseData = array('message' => 'Could not authenticate user. Check the password.');
+				return $response->withJson($responseData, 401);
+			}
 		}
 		else
 		{
-			// Auth failed
-			$responseData = array('message' => 'Could not authenticate user. Check the password.');
-			return $response->withJson($responseData, 401);
+			// User not found
+			$responseData = array('message' => 'Could not find user.');
+			return $response->withJson($responseData, 404);
 		}
 	}
 
