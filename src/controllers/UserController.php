@@ -2,6 +2,16 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
+include_once '../services/UserService.php';
+include_once '../services/AuthService.php';
+
+class UserController
+{
+	public function __construct()
+	{}
+
+	
+}
 
 /* Password hash creation logic
 $options = array(

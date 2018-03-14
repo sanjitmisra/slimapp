@@ -20,7 +20,8 @@ class AuthController
 		$password = $parsedBody['password'] ?? false;
 
 		// This needs to be fixed, get actual userId by resolving the username. Call UserService here.
-		$userid = 45;
+		$userSvc = new UserService();
+		$userid = $userSvc->getUserIdForUserName($username);
 		
 		// Create an instance of UserService
 		$authSvc = new AuthService();

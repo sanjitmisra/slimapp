@@ -27,7 +27,6 @@ class Auth
 			return true;
 		}
 		return false;
-		//return "INSERT INTO " . $this->table_name . " (userid, passwordhash) VALUES (" . $this->userId . ",'" . $this->passwordHash . "')";
 	}
 
 	// To use this function, the $userId property needs to be set by the caller method prior to calling.
